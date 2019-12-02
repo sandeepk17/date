@@ -1,4 +1,4 @@
-package lib
+package date
 
 import (
 	"fmt"
@@ -7,7 +7,11 @@ import (
 
 // Date ...
 type Date struct {
+	datetime interface{}
 }
+
+// DateHandler ...
+type DateHandler func(d *Date)
 
 // DateFormat ...
 const DateFormat = "2006-01-02"
@@ -16,8 +20,26 @@ const DateFormat = "2006-01-02"
 const DateTimeFormat = "2006-01-02 15:04:05"
 
 // NewDate ...
-func NewDate() *Date {
-	return &Date{}
+func NewDate(opts ...DateHandler) *Date {
+	var d = &Date{}
+	for _, o := range opts {
+		o(d)
+	}
+	return d
+}
+
+// BindDate ...
+func BindDate(dateStr string) DateHandler {
+	return func(d *Date) {
+		d.datetime, _ = time.Parse(DateFormat, dateStr)
+	}
+}
+
+// BindDateTime ...
+func BindDateTime(datetimeStr string) DateHandler {
+	return func(d *Date) {
+		d.datetime, _ = time.Parse(DateTimeFormat, datetimeStr)
+	}
 }
 
 // TodayDate ...
@@ -85,6 +107,12 @@ func (d *Date) LastMonthEndDate() string {
 	return d.monthStart().AddDate(0, 0, -1).Format(DateFormat)
 }
 
+// YearStartDate ...
+func (d *Date) YearStartDate() string {
+	y, _, _ := d.date()
+	return time.Date(y, 1, 1, 0, 0, 0, 0, time.Local).Format(DateFormat)
+}
+
 func (d *Date) weekStart() time.Time {
 	return d.now().AddDate(0, 0, -int(d.week())+1)
 }
@@ -95,6 +123,9 @@ func (d *Date) monthStart() time.Time {
 }
 
 func (d *Date) now() time.Time {
+	if d.datetime != nil {
+		return (d.datetime).(time.Time)
+	}
 	return time.Now()
 }
 

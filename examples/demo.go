@@ -1,13 +1,3 @@
-# date
-a date lib for golang
-
-## install
-```shell script
-go get github.com/gohouse/date
-```
-
-## example
-```go
 package main
 
 import (
@@ -35,18 +25,3 @@ func main() {
 	fmt.Println(newDate.LastMonthStartDate())
 	fmt.Println(newDate.YearStartDate())
 }
-```
-运行结果
-```shell script
-2019-12-01
-2019-11-01
-2019-01-01
------------------------------
-2016-02-29 23:59:59
-2016-02-01
-2016-01-01
------------------------------
-2011-02-28 00:00:00
-2011-02-01
-2011-01-01
-```
